@@ -3,7 +3,7 @@ require 'rubygems/specification'
 require 'rake'
 require 'rake/gempackagetask'
 require 'spec/rake/spectask'
- 
+
 GEM = "is_taggable"
 GEM_VERSION = "0.0.1"
 SUMMARY = "Tagging Implementation Primarily for Item Engine."

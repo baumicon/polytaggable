@@ -1,6 +1,6 @@
 module Polytaggable
-  #require 'is_taggable/string_extensions'
-  puts "Polytaggable initialized"
+  require 'polytaggable/string_extensions'
+  #puts "Polytaggable initialized"
   def self.included(base) 
     base.extend ActMethods 
   end 
@@ -80,7 +80,7 @@ module Polytaggable
       @tag_attributes = val
     end
     def set_tags
-      self.tag_list = {:tags => @tag_attributes, :tagger_id => send("#{options[:tagger]}.id"), :tagger_type => "#{options[:tagger].capitalize}"} unless @tag_attributes.blank?
+      self.tag_list = {:tags => @tag_attributes, :tagger_id => send("#{options[:tagger]}_id"), :tagger_type => "#{options[:tagger].capitalize}"} unless @tag_attributes.blank?
     end
     def tag_list
       all_tags = self.tags
@@ -146,3 +146,4 @@ module Polytaggable
     end
   end
 end
+ActiveRecord::Base.send :include, Polytaggable if defined?( ActiveRecord::Base )

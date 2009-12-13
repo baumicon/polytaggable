@@ -6,6 +6,7 @@ ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":me
 ActiveRecord::Schema.define(:version => 1) do
   create_table :assets do |t|
     t.string   :name
+    t.integer  :user_id
   end
   create_table :users do |t|
     t.string :email
@@ -29,6 +30,7 @@ ActiveRecord::Schema.define(:version => 1) do
 end
 
 class Asset < ActiveRecord::Base
+  belongs_to :user
   acts_as_polytaggable(:tagger => "user")
 end
 class Tag < ActiveRecord::Base
@@ -50,4 +52,5 @@ class Tagging < ActiveRecord::Base
 end
 class User < ActiveRecord::Base
   has_many :tags, :as => :tagger, :dependent => :destroy, :order => "user_friendly_name ASC"
+  has_many :assets
 end

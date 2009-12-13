@@ -7,8 +7,8 @@ describe "Asset" do
     }.merge(args)
   end
   before(:each) do
-    @user = stub_model(User, {:email => "fake@user.com"})
-    @asset = Asset.new
+    @user = User.create!(:email => "fake@user.com")
+    @asset = @user.assets.build
     @tag = "George Washington's, '1-F'"
   end
   

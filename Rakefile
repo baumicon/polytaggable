@@ -4,9 +4,9 @@ require 'rake'
 require 'rake/gempackagetask'
 require 'spec/rake/spectask'
 
-GEM = "is_taggable"
-GEM_VERSION = "0.0.1"
-SUMMARY = "Tagging Implementation Primarily for Item Engine."
+GEM = "polytaggable"
+GEM_VERSION = "0.0.2"
+SUMMARY = "Tagging Implementation where you can specify the tagger through polymorphic association."
 AUTHOR = "Michael Baumgarten"
 EMAIL = "mbaumgarten@minofare.com"
 HOMEPAGE = "http://minofare.com"
@@ -18,7 +18,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = SUMMARY
   s.require_paths = ['lib']
-  s.files = ['lib/is_taggable.rb']
+  s.files = ['lib/polytaggable.rb', 'lib/polytaggable/string_extensions.rb']
   
   s.author = AUTHOR
   s.email = EMAIL

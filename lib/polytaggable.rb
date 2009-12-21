@@ -74,7 +74,7 @@ module Polytaggable
   end 
   module InstanceMethods
     def tag_attributes
-      @tag_attributes ||= tag_list.blank? ? ignore_nil{item.item_type.suggested_tags} : tag_list
+      @tag_attributes ||= tag_list
     end
     def tag_attributes=(val)
       @tag_attributes = val

@@ -5,7 +5,7 @@ require 'rake/gempackagetask'
 require 'spec/rake/spectask'
 
 GEM = "polytaggable"
-GEM_VERSION = "0.0.2"
+GEM_VERSION = "0.0.4"
 SUMMARY = "Tagging Implementation where you can specify the tagger through polymorphic association."
 AUTHOR = "Michael Baumgarten"
 EMAIL = "mbaumgarten@minofare.com"
@@ -38,7 +38,7 @@ end
  
 desc "Install the gem locally"
 task :install => [:package] do
-  sh %{sudo gem install pkg/#{GEM}-#{GEM_VERSION}}
+  sh %{gem install pkg/#{GEM}-#{GEM_VERSION}}
 end
  
 desc "Create a gemspec file"

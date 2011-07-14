@@ -62,13 +62,20 @@ module Polytaggable
           groups << "#{taggings_alias}.taggable_id HAVING COUNT(#{taggings_alias}.taggable_id) = #{search_tags.size}"
         end
       end
-
-      { :select => "DISTINCT #{table_name}.*",
-        :joins => "LEFT OUTER JOIN #{Tagging.table_name} #{taggings_alias} ON #{taggings_alias}.taggable_id = #{table_name}.#{primary_key} AND #{taggings_alias}.taggable_type = #{quote_value(base_class.name)} " +
-                  "LEFT OUTER JOIN #{Tag.table_name} #{tags_alias} ON #{tags_alias}.id = #{taggings_alias}.tag_id",
-        :conditions => conditions.join(" AND "),
-        :group      => groups.join(", ")
-      }.update(options)
+      if groups.blank?
+        { :select => "DISTINCT #{table_name}.*",
+          :joins => "LEFT OUTER JOIN #{Tagging.table_name} #{taggings_alias} ON #{taggings_alias}.taggable_id = #{table_name}.#{primary_key} AND #{taggings_alias}.taggable_type = #{quote_value(base_class.name)} " +
+                    "LEFT OUTER JOIN #{Tag.table_name} #{tags_alias} ON #{tags_alias}.id = #{taggings_alias}.tag_id",
+          :conditions => conditions.join(" AND ")
+        }.update(options)
+      else
+        { :select => "DISTINCT #{table_name}.*",
+          :joins => "LEFT OUTER JOIN #{Tagging.table_name} #{taggings_alias} ON #{taggings_alias}.taggable_id = #{table_name}.#{primary_key} AND #{taggings_alias}.taggable_type = #{quote_value(base_class.name)} " +
+                    "LEFT OUTER JOIN #{Tag.table_name} #{tags_alias} ON #{tags_alias}.id = #{taggings_alias}.tag_id",
+          :conditions => conditions.join(" AND "),
+          :group      => groups.join(", ")
+        }.update(options)
+      end
     end
     
   end 
@@ -80,7 +87,7 @@ module Polytaggable
       @tag_attributes = val
     end
     def set_tags
-      self.tag_list = {:tags => @tag_attributes, :tagger_id => send("#{options[:tagger]}_id"), :tagger_type => "#{options[:tagger].capitalize}"} unless @tag_attributes.blank?
+      self.tag_list = {:tags => @tag_attributes.blank? ? "" : @tag_attributes, :tagger_id => send("#{options[:tagger]}_id"), :tagger_type => "#{options[:tagger].capitalize}"}
     end
     def tag_list
       all_tags = self.tags

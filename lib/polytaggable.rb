@@ -87,7 +87,7 @@ module Polytaggable
       @tag_attributes = val
     end
     def set_tags
-      self.tag_list = {:tags => @tag_attributes.blank? ? "" : @tag_attributes, :tagger_id => send("#{options[:tagger]}_id"), :tagger_type => "#{options[:tagger].capitalize}"}
+      self.tag_list = {:tags => tag_attributes.blank? ? "" : tag_attributes, :tagger_id => send("#{options[:tagger]}_id"), :tagger_type => "#{options[:tagger].capitalize}"}
     end
     def tag_list
       all_tags = self.tags

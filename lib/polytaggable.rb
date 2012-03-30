@@ -11,7 +11,7 @@ module Polytaggable
       has_many :tags, :through => :taggings, :dependent => :destroy
       before_save :set_tags
       unless included_modules.include? InstanceMethods 
-        class_inheritable_accessor :options
+        class_attribute :options
         extend ClassMethods 
         include InstanceMethods 
       end 

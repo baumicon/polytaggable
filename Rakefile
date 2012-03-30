@@ -5,7 +5,7 @@ require 'rake/gempackagetask'
 require 'spec/rake/spectask'
 
 GEM = "polytaggable"
-GEM_VERSION = "0.0.5"
+GEM_VERSION = "0.0.6"
 SUMMARY = "Tagging Implementation where you can specify the tagger through polymorphic association."
 AUTHOR = "Michael Baumgarten"
 EMAIL = "mbaumgarten@minofare.com"

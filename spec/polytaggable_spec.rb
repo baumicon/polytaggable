@@ -69,4 +69,11 @@ describe "Asset" do
     
     @asset.tags.length.should eql(1)
   end
+  
+  it "should set tags via tag_list=" do
+    @asset.tag_list = { tags: "tag1 tag2" }
+    @asset.save!
+    @asset.tags.count.should == 2
+    @asset.tag_list.should == "tag1 tag2"
+  end
 end

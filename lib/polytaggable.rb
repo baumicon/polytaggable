@@ -7,7 +7,7 @@ module Polytaggable
   module ActMethods 
     def acts_as_polytaggable(*args)
       options = args.extract_options!
-      has_many :taggings, :as => :taggable, :include => :tag
+      has_many :taggings, ->{ includes(:tag) }, :as => :taggable
       has_many :tags, :through => :taggings, :dependent => :destroy
       before_save :set_tags
       unless included_modules.include? InstanceMethods 
@@ -102,7 +102,7 @@ module Polytaggable
       self.tags.collect{|t| (t.user_friendly_name.include? " ") ? "\"#{t.user_friendly_name}\"" : t.user_friendly_name }.join(" ")
     end
     def tag_list=(attributes)
-      
+
       old_tags = self.tags
 
       # scan for all tags even in quotes
@@ -123,7 +123,7 @@ module Polytaggable
           # Tags also get their stem extended string view config/initializers/stemmable.rb
           # Stems prevent duplicates with the same word meaning but different spellings ie: marker markers markings marked
           # TODO: Add spell checking?
-          new_tag = Tag.find(:first, :conditions => {:name_stem => new_tag_string.stem, :tagger_id => attributes[:tagger_id], :tagger_type => attributes[:tagger_type]})
+          new_tag = Tag.where({:name_stem => new_tag_string.stem, :tagger_id => attributes[:tagger_id], :tagger_type => attributes[:tagger_type]}).first
 
 
           if new_tag.nil?
@@ -147,7 +147,7 @@ module Polytaggable
       end
 
       if tag_array.blank?
-        taggings.find(:all).each(&:destroy)
+        taggings.each(&:destroy)
         taggings.reset
       end
     end

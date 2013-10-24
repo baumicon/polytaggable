@@ -7,7 +7,7 @@ module Polytaggable
   module ActMethods 
     def acts_as_polytaggable(*args)
       options = args.extract_options!
-      has_many :taggings, ->{ includes(:tag) }, :as => :taggable
+      has_many :taggings, :as => :taggable
       has_many :tags, :through => :taggings, :dependent => :destroy
       before_save :set_tags
       unless included_modules.include? InstanceMethods 

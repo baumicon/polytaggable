@@ -1,7 +1,7 @@
 #$: << File.join(File.dirname(__FILE__), '..', 'lib')
 require 'rubygems'
-require 'activerecord'
-require 'lib/polytaggable.rb'
+require 'active_record'
+require_relative '../lib/polytaggable.rb'
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
 ActiveRecord::Schema.define(:version => 1) do
   create_table :assets do |t|
@@ -51,6 +51,6 @@ class Tagging < ActiveRecord::Base
   
 end
 class User < ActiveRecord::Base
-  has_many :tags, :as => :tagger, :dependent => :destroy, :order => "user_friendly_name ASC"
+  has_many :tags, ->{ order("user_friendly_name ASC") }, :as => :tagger, :dependent => :destroy
   has_many :assets
 end

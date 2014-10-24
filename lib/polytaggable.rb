@@ -1,38 +1,38 @@
 module Polytaggable
   require 'polytaggable/string_extensions'
   #puts "Polytaggable initialized"
-  def self.included(base) 
-    base.extend ActMethods 
-  end 
-  module ActMethods 
+  def self.included(base)
+    base.extend ActMethods
+  end
+  module ActMethods
     def acts_as_polytaggable(*args)
       options = args.extract_options!
       has_many :taggings, :as => :taggable
       has_many :tags, :through => :taggings, :dependent => :destroy
       before_save :set_tags
-      unless included_modules.include? InstanceMethods 
+      unless included_modules.include? InstanceMethods
         class_attribute :options
-        extend ClassMethods 
-        include InstanceMethods 
-      end 
+        extend ClassMethods
+        include InstanceMethods
+      end
       self.options = options
-      
-    end 
-  end 
+
+    end
+  end
   module ClassMethods
     def helpers
       ActionController::Base.helpers
     end
-    
+
     # Pass either a tag, string, or an array of strings or tags.
-    # 
+    #
     # Options:
     #   :exclude - Find models that are not tagged with the given tags
     #   :match_all - Find models that match all of the given tags, not just one
     #   :conditions - A piece of SQL conditions to add to the query
     def find_tagged_with(*args)
       options = find_options_for_find_tagged_with(*args)
-      options.blank? ? [] : find(:all, options)
+      options.blank? ? [] : where(options).to_a
     end
     def find_options_for_find_tagged_with(finder_tags, options = {})
       #tags = tags.is_a?(Array) ? TagList.new(tags.map(&:to_s)) : TagList.from(tags)
@@ -42,10 +42,10 @@ module Polytaggable
 
       conditions = []
       conditions << sanitize_sql(options.delete(:conditions)) if options[:conditions]
-      
+
       groups = []
       groups << sanitize_sql(options.delete(:group)) if options[:group]
-      
+
       unless (on = options.delete(:on)).nil?
         conditions << sanitize_sql(["context = ?",on.to_s])
       end
@@ -77,8 +77,8 @@ module Polytaggable
         }.update(options)
       end
     end
-    
-  end 
+
+  end
   module InstanceMethods
     def tag_attributes
       @tag_attributes ||= tag_list
@@ -94,9 +94,9 @@ module Polytaggable
 
       # Remove smart tags from standard tags for the tag list. Should be a user preference.
       # TODO: This is causing the smart tags to be duplicated in the taggings table. Need a better solution.
-      #all_tags.reject!{|a| 
+      #all_tags.reject!{|a|
         #logger.debug("******* TAG DEBUG: \n  tag: #{a.name}   smart: #{a.is_smart_tag?}")
-        #a.is_smart_tag? 
+        #a.is_smart_tag?
       #}
 
       self.tags.collect{|t| (t.user_friendly_name.include? " ") ? "\"#{t.user_friendly_name}\"" : t.user_friendly_name }.join(" ")
@@ -136,12 +136,12 @@ module Polytaggable
           if tag_exists.blank?
             old_tags << new_tag
           end
-          
+
 
         end
         dead_tags = old_tags.reject { |old_tag| tag_array.detect{|tag| tag.url_friendly == old_tag.name } }
         if dead_tags.any?
-          taggings.find(:all, :conditions => ["tag_id IN (?)", dead_tags.map(&:id)]).each(&:destroy)
+          taggings.where(["tag_id IN (?)", dead_tags.map(&:id)]).each(&:destroy)
           taggings.reset
         end
       end
